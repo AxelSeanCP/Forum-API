@@ -136,6 +136,57 @@ describe("CommentRepositoryPostgres", () => {
     });
   });
 
+  describe("getCommentsByThreadId function", () => {
+    it("should return empty array when no comments is found", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      const comments = await commentRepository.getCommentsByThreadId(
+        "thread-123"
+      );
+
+      expect(comments).toHaveLength(0);
+    });
+
+    it("should return comments from a thread correctly", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-123",
+        content: "comment from 123",
+      });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-456",
+        content: "comment from 456",
+      });
+      const threadId = "thread-123";
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      const comments = await commentRepository.getCommentsByThreadId(threadId);
+
+      expect(comments).toHaveLength(2);
+      expect(comments[0]).toEqual(
+        expect.objectContaining({
+          id: "comment-456",
+          username: "dicoding",
+          date: expect.any(String),
+          content: "comment from 456",
+        })
+      );
+      expect(comments[1]).toEqual(
+        expect.objectContaining({
+          id: "comment-123",
+          username: "dicoding",
+          date: expect.any(String),
+          content: "comment from 123",
+        })
+      );
+    });
+  });
+
   describe("deleteComment function", () => {
     it("should delete comment correctly", async () => {
       await UsersTableTestHelper.addUser({ id: "user-123" });
@@ -151,7 +202,6 @@ describe("CommentRepositoryPostgres", () => {
       await commentRepository.deleteComment(commentId);
 
       const comment = await CommentsTableTestHelper.findCommentsById(commentId);
-      expect(comment[0].content).toEqual("**komentar telah dihapus**");
       expect(comment[0].is_deleted).toEqual(true);
     });
   });

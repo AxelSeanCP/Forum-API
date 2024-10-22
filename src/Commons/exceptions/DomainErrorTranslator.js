@@ -56,6 +56,12 @@ DomainErrorTranslator._directories = {
   "GET_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat menampilkan thread karena tipe data tidak sesuai"
   ),
+  "GET_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
+    "tidak dapat menampilkan comment karena property yang dibutuhkan tidak ada"
+  ),
+  "GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "tidak dapat menampilkan comment karena tipe data tidak sesuai"
+  ),
 };
 
 module.exports = DomainErrorTranslator;

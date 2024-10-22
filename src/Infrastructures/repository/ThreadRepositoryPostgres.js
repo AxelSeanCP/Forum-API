@@ -1,8 +1,6 @@
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AddedThread = require("../../Domains/threads/entities/AddedThread");
-const {
-  GetThread,
-} = require("../../Domains/threads/entities/ThreadWithComments");
+const GetThread = require("../../Domains/threads/entities/GetThread");
 const ThreadRepository = require("../../Domains/threads/ThreadRepository");
 
 class ThreadRepositoryPostgres extends ThreadRepository {
@@ -41,7 +39,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   }
 
   async getThread(threadId) {
-    const threadQuery = {
+    const query = {
       text: `SELECT t.*, u.username
       FROM threads t
       LEFT JOIN users u ON t.owner = u.id
@@ -49,29 +47,13 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       values: [threadId],
     };
 
-    const threadResult = await this._pool.query(threadQuery);
+    const result = await this._pool.query(query);
 
-    const commentQuery = {
-      text: `SELECT c.*, u.username
-      FROM comments c
-      LEFT JOIN users u ON u.id = c.owner
-      WHERE c.thread_id = $1
-      ORDER BY c.date ASC`,
-      values: [threadId],
-    };
-
-    const commentResult = await this._pool.query(commentQuery);
-
-    const threadData = {
-      ...threadResult.rows[0],
-      date: threadResult.rows[0].date.toISOString(),
-    };
-    const commentData = commentResult.rows.map((comment) => ({
-      ...comment,
-      date: comment.date.toISOString(),
-    }));
-
-    return new GetThread(threadData, commentData);
+    return new GetThread({
+      ...result.rows[0],
+      date: result.rows[0].date.toISOString(),
+      comments: [],
+    });
   }
 }
 

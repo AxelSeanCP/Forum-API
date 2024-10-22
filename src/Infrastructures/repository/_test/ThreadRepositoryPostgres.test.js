@@ -1,11 +1,7 @@
 const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
-const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const NewThread = require("../../../Domains/threads/entities/NewThread");
 const AddedThread = require("../../../Domains/threads/entities/AddedThread");
-const {
-  GetThread,
-} = require("../../../Domains/threads/entities/ThreadWithComments");
 const pool = require("../../../Infrastructures/database/postgres/pool");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
@@ -107,12 +103,8 @@ describe("threadRepositoryPostgres", () => {
       await UsersTableTestHelper.addUser({ id: "user-123" });
       await ThreadsTableTestHelper.addThreads({
         id: "thread-123",
-      });
-      await CommentsTableTestHelper.addComments({
-        id: "comment-123",
-      });
-      await CommentsTableTestHelper.addComments({
-        id: "comment-456",
+        title: "some title",
+        body: "some body",
       });
 
       const thread = await threadRepositoryPostgres.getThread(threadId);
@@ -124,20 +116,7 @@ describe("threadRepositoryPostgres", () => {
           body: "some body",
           date: expect.any(String), // Ignore exact date match, just check it's a string
           username: "dicoding",
-          comments: expect.arrayContaining([
-            expect.objectContaining({
-              id: "comment-456",
-              username: "dicoding",
-              date: expect.any(String), // Ignore exact date match
-              content: "a comment",
-            }),
-            expect.objectContaining({
-              id: "comment-123",
-              username: "dicoding",
-              date: expect.any(String), // Ignore exact date match
-              content: "a comment",
-            }),
-          ]),
+          comments: [],
         })
       );
     });

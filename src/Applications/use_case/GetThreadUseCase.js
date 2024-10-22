@@ -1,11 +1,21 @@
 class GetThreadUseCase {
-  constructor({ threadRepository }) {
+  constructor({ threadRepository, commentRepository }) {
     this._threadRepository = threadRepository;
+    this._commentRepository = commentRepository;
   }
 
   async execute(threadId) {
     await this._threadRepository.checkThread(threadId);
-    return this._threadRepository.getThread(threadId);
+
+    const thread = await this._threadRepository.getThread(threadId);
+
+    const comments = await this._commentRepository.getCommentsByThreadId(
+      threadId
+    );
+
+    thread.comments = comments;
+
+    return thread;
   }
 }
 
