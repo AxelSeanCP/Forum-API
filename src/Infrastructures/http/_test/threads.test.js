@@ -1,6 +1,12 @@
 const pool = require("../../database/postgres/pool");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper");
+const {
+  registerUserHelper,
+  loginUserHelper,
+  createThreadHelper,
+  createCommentHelper,
+} = require("./_testHelper");
 const container = require("../../container");
 const createServer = require("../createServer");
 
@@ -16,17 +22,6 @@ describe("/threads endpoint", () => {
 
   describe("when POST /threads", () => {
     it("should response 201 and persisted threads", async () => {
-      const registerPayload = {
-        username: "dicoding",
-        password: "secret",
-        fullname: "Dicoding Indonesia",
-      };
-
-      const loginPayload = {
-        username: "dicoding",
-        password: "secret",
-      };
-
       const requestPayload = {
         title: "title",
         body: "body",
@@ -34,21 +29,8 @@ describe("/threads endpoint", () => {
 
       const server = await createServer(container);
 
-      await server.inject({
-        method: "POST",
-        url: "/users",
-        payload: registerPayload,
-      });
-
-      const loginResponse = await server.inject({
-        method: "POST",
-        url: "/authentications",
-        payload: loginPayload,
-      });
-
-      const loginResponseJson = JSON.parse(loginResponse.payload);
-
-      const accessToken = loginResponseJson.data.accessToken;
+      await registerUserHelper(server, {});
+      const accessToken = await loginUserHelper(server, {});
 
       const response = await server.inject({
         method: "POST",
@@ -61,6 +43,48 @@ describe("/threads endpoint", () => {
       expect(response.statusCode).toEqual(201);
       expect(responseJson.status).toEqual("success");
       expect(responseJson.data.addedThread).toBeDefined();
+    });
+  });
+
+  describe("when GET /threads", () => {
+    it("should response 200 and return thread with comments", async () => {
+      const server = await createServer(container);
+
+      await registerUserHelper(server, {});
+      const accessToken = await loginUserHelper(server, {});
+      const threadId = await createThreadHelper(server, accessToken, {});
+      await createCommentHelper(server, accessToken, threadId, {
+        content: "comment no 1",
+      });
+      await createCommentHelper(server, accessToken, threadId, {
+        content: "comment no 2",
+      });
+
+      const response = await server.inject({
+        method: "GET",
+        url: `/threads/${threadId}`,
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual("success");
+      expect(responseJson.data.thread).toBeDefined();
+    });
+
+    it("should response 404 when thread not found", async () => {
+      const server = await createServer(container);
+
+      const threadId = "xxx";
+
+      const response = await server.inject({
+        method: "GET",
+        url: `/threads/${threadId}`,
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual("fail");
+      expect(responseJson.message).toEqual("thread tidak ditemukan");
     });
   });
 });

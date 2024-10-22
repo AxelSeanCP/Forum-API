@@ -22,11 +22,11 @@ describe("AddThreadUseCase", () => {
       .fn()
       .mockImplementation(() => Promise.resolve(mockAddedThread));
 
-    const getThreadUseCase = new AddThreadUseCase({
+    const addThreadUseCase = new AddThreadUseCase({
       threadRepository: mockThreadRepository,
     });
 
-    const addedThread = await getThreadUseCase.execute(
+    const addedThread = await addThreadUseCase.execute(
       "user-123",
       useCasePayload
     );

@@ -12,7 +12,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async addComment(userId, threadId, content) {
     const id = `comment-${this._idGenerator()}`;
-    const date = new Date().toISOString();
+    const date = new Date();
     const isDeleted = false;
 
     const query = {
@@ -53,7 +53,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async deleteComment(commentId) {
     const query = {
-      text: "UPDATE comments SET content = '**komentar telah dihapus**', is_deleted = true WHERE id = $1",
+      text: "UPDATE comments SET is_deleted = true WHERE id = $1",
       values: [commentId],
     };
 
