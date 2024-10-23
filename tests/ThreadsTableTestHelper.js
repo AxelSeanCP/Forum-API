@@ -5,7 +5,7 @@ const ThreadsTableTestHelper = {
     id = "thread-123",
     title = "some title",
     body = "some body",
-    date = new Date().toISOString(),
+    date = new Date(),
     owner = "user-123",
   }) {
     const query = {

@@ -62,6 +62,17 @@ DomainErrorTranslator._directories = {
   "GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat menampilkan comment karena tipe data tidak sesuai"
   ),
+  "ADDED_REPLY.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
+    "tidak dapat menambahkan reply karena property yang dibutuhkan tidak ada"
+  ),
+  "ADDED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "tidak dapat menambahkan reply karena tipe data tidak sesuai"
+  ),
+  "ADD_REPLY_USE_CASE.NOT_CONTAIN_REPLY": new InvariantError(
+    "harus mengirimkan reply"
+  ),
+  "ADD_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION":
+    new InvariantError("reply harus string"),
 };
 
 module.exports = DomainErrorTranslator;

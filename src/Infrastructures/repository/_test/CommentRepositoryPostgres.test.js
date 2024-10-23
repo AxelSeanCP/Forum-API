@@ -156,10 +156,12 @@ describe("CommentRepositoryPostgres", () => {
       await CommentsTableTestHelper.addComments({
         id: "comment-123",
         content: "comment from 123",
+        date: "2024-10-22",
       });
       await CommentsTableTestHelper.addComments({
         id: "comment-456",
         content: "comment from 456",
+        date: "2024-10-23",
       });
       const threadId = "thread-123";
 
@@ -170,18 +172,18 @@ describe("CommentRepositoryPostgres", () => {
       expect(comments).toHaveLength(2);
       expect(comments[0]).toEqual(
         expect.objectContaining({
-          id: "comment-456",
-          username: "dicoding",
-          date: expect.any(String),
-          content: "comment from 456",
-        })
-      );
-      expect(comments[1]).toEqual(
-        expect.objectContaining({
           id: "comment-123",
           username: "dicoding",
           date: expect.any(String),
           content: "comment from 123",
+        })
+      );
+      expect(comments[1]).toEqual(
+        expect.objectContaining({
+          id: "comment-456",
+          username: "dicoding",
+          date: expect.any(String),
+          content: "comment from 456",
         })
       );
     });
