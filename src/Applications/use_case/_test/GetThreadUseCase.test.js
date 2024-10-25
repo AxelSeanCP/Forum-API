@@ -1,7 +1,9 @@
-const CommentRepository = require("../../../Domains/comments/CommentRepository");
-const GetComment = require("../../../Domains/comments/entities/GetComment");
-const GetThread = require("../../../Domains/threads/entities/GetThread");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
+const CommentRepository = require("../../../Domains/comments/CommentRepository");
+const ReplyRepository = require("../../../Domains/replies/ReplyRepository");
+const GetComment = require("../../../Domains/comments/entities/GetComment");
+const GetReply = require("../../../Domains/replies/entities/GetReply");
+const GetThread = require("../../../Domains/threads/entities/GetThread");
 const GetThreadUseCase = require("../GetThreadUseCase");
 
 describe("GetThreadUseCase", () => {
@@ -21,6 +23,7 @@ describe("GetThreadUseCase", () => {
       username: "dicoding",
       date: mockDate,
       content: "a comment",
+      replies: [],
     });
 
     const mockGetComment2 = new GetComment({
@@ -28,26 +31,39 @@ describe("GetThreadUseCase", () => {
       username: "dicoding",
       date: mockDate,
       content: "a comment",
+      replies: [],
+    });
+
+    const mockGetReply = new GetReply({
+      id: "reply-123",
+      username: "dicoding",
+      date: mockDate,
+      content: "a reply",
     });
 
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
+    const mockReplyRepository = new ReplyRepository();
 
-    mockThreadRepository.getThread = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockGetThread));
     mockThreadRepository.checkThread = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
+    mockThreadRepository.getThread = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(mockGetThread));
     mockCommentRepository.getCommentsByThreadId = jest
       .fn()
       .mockImplementation(() =>
         Promise.resolve([mockGetComment1, mockGetComment2])
       );
+    mockReplyRepository.getRepliesByCommentId = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve([mockGetReply]));
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
+      replyRepository: mockReplyRepository,
     });
 
     const thread = await getThreadUseCase.execute("thread-123");
@@ -64,15 +80,37 @@ describe("GetThreadUseCase", () => {
           username: "dicoding",
           date: mockDate,
           content: "a comment",
+          replies: [
+            {
+              id: "reply-123",
+              username: "dicoding",
+              date: mockDate,
+              content: "a reply",
+            },
+          ],
         },
         {
           id: "comment-456",
           username: "dicoding",
           date: mockDate,
           content: "a comment",
+          replies: [
+            {
+              id: "reply-123",
+              username: "dicoding",
+              date: mockDate,
+              content: "a reply",
+            },
+          ],
         },
       ],
     });
     expect(mockThreadRepository.getThread).toHaveBeenCalledWith("thread-123");
+    expect(mockCommentRepository.getCommentsByThreadId).toHaveBeenCalledWith(
+      "thread-123"
+    );
+    expect(mockReplyRepository.getRepliesByCommentId).toHaveBeenCalledWith(
+      "comment-123"
+    );
   });
 });

@@ -6,6 +6,7 @@ const {
   loginUserHelper,
   createThreadHelper,
   createCommentHelper,
+  createReplyHelper,
 } = require("./_testHelper");
 const container = require("../../container");
 const createServer = require("../createServer");
@@ -47,17 +48,28 @@ describe("/threads endpoint", () => {
   });
 
   describe("when GET /threads", () => {
-    it("should response 200 and return thread with comments", async () => {
+    it("should response 200 and return thread with comments and replies", async () => {
       const server = await createServer(container);
 
       await registerUserHelper(server, {});
       const accessToken = await loginUserHelper(server, {});
       const threadId = await createThreadHelper(server, accessToken, {});
-      await createCommentHelper(server, accessToken, threadId, {
-        content: "comment no 1",
-      });
+      const commentId = await createCommentHelper(
+        server,
+        accessToken,
+        threadId,
+        {
+          content: "comment no 1",
+        }
+      );
       await createCommentHelper(server, accessToken, threadId, {
         content: "comment no 2",
+      });
+      await createReplyHelper(server, accessToken, threadId, commentId, {
+        content: "reply no 1",
+      });
+      await createReplyHelper(server, accessToken, threadId, commentId, {
+        content: "reply no 2",
       });
 
       const response = await server.inject({

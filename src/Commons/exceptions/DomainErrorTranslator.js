@@ -73,6 +73,12 @@ DomainErrorTranslator._directories = {
   ),
   "ADD_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION":
     new InvariantError("reply harus string"),
+  "GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
+    "tidak dapat menampilkan reply karena property yang dibutuhkan tidak ada"
+  ),
+  "GET_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "tidak dapat menampilkan reply karena tipe data tidak sesuai"
+  ),
 };
 
 module.exports = DomainErrorTranslator;

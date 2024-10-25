@@ -19,6 +19,7 @@ describe("a GetComment entities", () => {
       username: 123,
       date: true,
       content: "a comment",
+      replies: [],
     };
 
     expect(() => new GetComment(commentPayload)).toThrow(
@@ -26,13 +27,14 @@ describe("a GetComment entities", () => {
     );
   });
 
-  it("should map comment content to '**konten telah dihapus**' when comment is deleted", () => {
+  it("should map comment content to '**komentar telah dihapus**' when comment is deleted", () => {
     const commentPayload = {
       id: "comment-123",
       content: "a comment",
       date: new Date().toISOString(),
       username: "dicoding",
       is_deleted: true,
+      replies: [],
     };
 
     const getComment = new GetComment(commentPayload);
@@ -46,6 +48,7 @@ describe("a GetComment entities", () => {
       username: "dicoding",
       date: new Date().toISOString(),
       content: "a comment",
+      replies: [],
     };
 
     const getComment = new GetComment(commentPayload);
@@ -54,5 +57,6 @@ describe("a GetComment entities", () => {
     expect(getComment.username).toEqual(commentPayload.username);
     expect(getComment.date).toEqual(commentPayload.date);
     expect(getComment.content).toEqual(commentPayload.content);
+    expect(getComment.replies).toHaveLength(0);
   });
 });

@@ -70,7 +70,11 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     return result.rows.map(
       (comment) =>
-        new GetComment({ ...comment, date: comment.date.toISOString() })
+        new GetComment({
+          ...comment,
+          date: comment.date.toISOString(),
+          replies: [],
+        })
     );
   }
 

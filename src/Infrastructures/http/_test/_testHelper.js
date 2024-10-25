@@ -81,9 +81,32 @@ const createCommentHelper = async (
   return commentResponseJson.data.addedComment.id;
 };
 
+const createReplyHelper = async (
+  server,
+  accessToken,
+  threadId,
+  commentId,
+  { content = "a comment" }
+) => {
+  const replyPayload = {
+    content,
+  };
+
+  const replyResponse = await server.inject({
+    method: "POST",
+    url: `/threads/${threadId}/comments/${commentId}/replies`,
+    payload: replyPayload,
+    headers: { authorization: `Bearer ${accessToken}` },
+  });
+
+  const replyResponseJson = JSON.parse(replyResponse.payload);
+  return replyResponseJson.data.addedReply.id;
+};
+
 module.exports = {
   registerUserHelper,
   loginUserHelper,
   createThreadHelper,
   createCommentHelper,
+  createReplyHelper,
 };
