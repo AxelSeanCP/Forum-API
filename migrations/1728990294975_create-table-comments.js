@@ -19,7 +19,7 @@ exports.up = (pgm) => {
       notNull: true,
     },
     date: {
-      type: "TIMESTAMP",
+      type: "VARCHAR(50)",
       notNull: true,
     },
     owner: {

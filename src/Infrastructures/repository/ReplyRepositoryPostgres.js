@@ -13,7 +13,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
   async addReply(userId, commentId, content) {
     const id = `reply-${this._idGenerator()}`;
-    const date = new Date();
+    const date = new Date().toISOString();
     const isDeleted = false;
 
     const query = {
@@ -68,9 +68,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       return [];
     }
 
-    return result.rows.map(
-      (reply) => new GetReply({ ...reply, date: reply.date.toISOString() })
-    );
+    return result.rows.map((reply) => new GetReply({ ...reply }));
   }
 
   async deleteReply(replyId) {

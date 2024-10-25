@@ -13,7 +13,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   async addThread(userId, newThread) {
     const { title, body } = newThread;
     const id = `thread-${this._idGenerator()}`;
-    const date = new Date();
+    const date = new Date().toISOString();
 
     const query = {
       text: "INSERT INTO threads VALUES($1, $2, $3, $4, $5) RETURNING id, title, owner",
@@ -51,7 +51,6 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     return new GetThread({
       ...result.rows[0],
-      date: result.rows[0].date.toISOString(),
       comments: [],
     });
   }

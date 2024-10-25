@@ -13,7 +13,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async addComment(userId, threadId, content) {
     const id = `comment-${this._idGenerator()}`;
-    const date = new Date();
+    const date = new Date().toISOString();
     const isDeleted = false;
 
     const query = {
@@ -72,7 +72,6 @@ class CommentRepositoryPostgres extends CommentRepository {
       (comment) =>
         new GetComment({
           ...comment,
-          date: comment.date.toISOString(),
           replies: [],
         })
     );
