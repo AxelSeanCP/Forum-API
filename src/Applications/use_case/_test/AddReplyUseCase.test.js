@@ -5,28 +5,6 @@ const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const AddReplyUseCase = require("../AddReplyUseCase");
 
 describe("AddReplyUseCase", () => {
-  it("should throw error if payload not contain reply", async () => {
-    const useCasePayload = {};
-    const addReplyUseCase = new AddReplyUseCase({});
-
-    await expect(
-      addReplyUseCase.execute("", "", "", useCasePayload)
-    ).rejects.toThrow("ADD_REPLY_USE_CASE.NOT_CONTAIN_REPLY");
-  });
-
-  it("should throw error if reply not string", async () => {
-    const useCasePayload = {
-      content: 123,
-    };
-    const addReplyUseCase = new AddReplyUseCase({});
-
-    await expect(
-      addReplyUseCase.execute("", "", "", useCasePayload)
-    ).rejects.toThrow(
-      "ADD_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION"
-    );
-  });
-
   it("should orchestrating the addReply action correctly", async () => {
     const useCasePayload = {
       content: "a reply",

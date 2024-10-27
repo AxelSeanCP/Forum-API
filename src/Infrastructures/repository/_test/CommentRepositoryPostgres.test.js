@@ -6,6 +6,7 @@ const pool = require("../../database/postgres/pool");
 const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
+const GetComment = require("../../../Domains/comments/entities/GetComment");
 
 describe("CommentRepositoryPostgres", () => {
   afterAll(async () => {
@@ -151,17 +152,19 @@ describe("CommentRepositoryPostgres", () => {
     });
 
     it("should return comments from a thread correctly", async () => {
+      const mockDate = new Date("2024-10-27").toISOString();
+      const mockDate2 = new Date("2024-10-28").toISOString();
       await UsersTableTestHelper.addUser({ id: "user-123" });
       await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
       await CommentsTableTestHelper.addComments({
         id: "comment-123",
         content: "comment from 123",
-        date: "2024-10-22",
+        date: mockDate,
       });
       await CommentsTableTestHelper.addComments({
         id: "comment-456",
         content: "comment from 456",
-        date: "2024-10-23",
+        date: mockDate2,
       });
       const threadId = "thread-123";
 
@@ -170,20 +173,22 @@ describe("CommentRepositoryPostgres", () => {
       const comments = await commentRepository.getCommentsByThreadId(threadId);
 
       expect(comments).toHaveLength(2);
-      expect(comments[0]).toEqual(
-        expect.objectContaining({
+      expect(comments[0]).toStrictEqual(
+        new GetComment({
           id: "comment-123",
           username: "dicoding",
-          date: expect.any(String),
+          date: mockDate,
           content: "comment from 123",
+          replies: [],
         })
       );
-      expect(comments[1]).toEqual(
-        expect.objectContaining({
+      expect(comments[1]).toStrictEqual(
+        new GetComment({
           id: "comment-456",
           username: "dicoding",
-          date: expect.any(String),
+          date: mockDate2,
           content: "comment from 456",
+          replies: [],
         })
       );
     });

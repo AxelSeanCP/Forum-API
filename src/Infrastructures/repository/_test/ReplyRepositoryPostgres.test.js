@@ -7,6 +7,7 @@ const pool = require("../../database/postgres/pool");
 const ReplyRepositoryPostgres = require("../ReplyRepositoryPostgres");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
+const GetReply = require("../../../Domains/replies/entities/GetReply");
 
 describe("ReplyRepositoryPostgres", () => {
   afterAll(async () => {
@@ -154,24 +155,26 @@ describe("ReplyRepositoryPostgres", () => {
     });
 
     it("should return replies from a comment properly", async () => {
+      const mockDate = new Date("2024-10-27").toISOString();
+      const mockDate2 = new Date("2024-10-28").toISOString();
       await UsersTableTestHelper.addUser({ id: "user-123" });
       await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
       await CommentsTableTestHelper.addComments({
         id: "comment-123",
         content: "comment from 123",
-        date: "2024-10-22",
+        date: mockDate,
       });
       await RepliesTableTestHelper.addReply({
         id: "reply-123",
         content: "reply from 123",
-        date: "2024-10-24",
         commentId: "comment-123",
+        date: mockDate,
       });
       await RepliesTableTestHelper.addReply({
         id: "reply-456",
         content: "reply from 456",
-        date: "2024-10-25",
         commentId: "comment-123",
+        date: mockDate2,
       });
       const commentId = "comment-123";
 
@@ -180,19 +183,19 @@ describe("ReplyRepositoryPostgres", () => {
       const replies = await replyRepository.getRepliesByCommentId(commentId);
 
       expect(replies).toHaveLength(2);
-      expect(replies[0]).toEqual(
-        expect.objectContaining({
+      expect(replies[0]).toStrictEqual(
+        new GetReply({
           id: "reply-123",
           username: "dicoding",
-          date: expect.any(String),
+          date: mockDate,
           content: "reply from 123",
         })
       );
-      expect(replies[1]).toEqual(
-        expect.objectContaining({
+      expect(replies[1]).toStrictEqual(
+        new GetReply({
           id: "reply-456",
           username: "dicoding",
-          date: expect.any(String),
+          date: mockDate2,
           content: "reply from 456",
         })
       );

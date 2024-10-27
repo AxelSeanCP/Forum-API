@@ -45,11 +45,12 @@ DomainErrorTranslator._directories = {
   "ADDED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat membuat comment baru karena tipe data tidak sesuai"
   ),
-  "ADD_COMMENT_USE_CASE.NOT_CONTAIN_COMMENT": new InvariantError(
+  "NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
     "harus mengirimkan comment"
   ),
-  "ADD_COMMENT_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION":
-    new InvariantError("comment harus string"),
+  "NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "comment harus string"
+  ),
   "GET_THREAD.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
     "tidak dapat menampilkan thread karena property yang dibutuhkan tidak ada"
   ),
@@ -68,11 +69,12 @@ DomainErrorTranslator._directories = {
   "ADDED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat menambahkan reply karena tipe data tidak sesuai"
   ),
-  "ADD_REPLY_USE_CASE.NOT_CONTAIN_REPLY": new InvariantError(
+  "NEW_REPLY.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
     "harus mengirimkan reply"
   ),
-  "ADD_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION":
-    new InvariantError("reply harus string"),
+  "NEW_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "reply harus string"
+  ),
   "GET_REPLY.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
     "tidak dapat menampilkan reply karena property yang dibutuhkan tidak ada"
   ),

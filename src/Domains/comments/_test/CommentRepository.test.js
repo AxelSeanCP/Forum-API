@@ -13,6 +13,9 @@ describe("CommentRepository interface", () => {
     await expect(
       commentRepository.checkAvailabilityComment({})
     ).rejects.toThrow("COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    await expect(commentRepository.getCommentsByThreadId({})).rejects.toThrow(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
     await expect(commentRepository.deleteComment({})).rejects.toThrow(
       "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );

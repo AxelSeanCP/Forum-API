@@ -5,6 +5,7 @@ const AddedThread = require("../../../Domains/threads/entities/AddedThread");
 const pool = require("../../../Infrastructures/database/postgres/pool");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
+const GetThread = require("../../../Domains/threads/entities/GetThread");
 
 describe("threadRepositoryPostgres", () => {
   afterEach(async () => {
@@ -99,22 +100,26 @@ describe("threadRepositoryPostgres", () => {
         pool,
         () => {}
       );
+
+      const mockDate = new Date().toISOString();
+
       const threadId = "thread-123";
       await UsersTableTestHelper.addUser({ id: "user-123" });
       await ThreadsTableTestHelper.addThreads({
         id: "thread-123",
         title: "some title",
         body: "some body",
+        date: mockDate,
       });
 
       const thread = await threadRepositoryPostgres.getThread(threadId);
 
-      expect(thread).toEqual(
-        expect.objectContaining({
+      expect(thread).toStrictEqual(
+        new GetThread({
           id: "thread-123",
           title: "some title",
           body: "some body",
-          date: expect.any(String), // Ignore exact date match, just check it's a string
+          date: mockDate,
           username: "dicoding",
           comments: [],
         })

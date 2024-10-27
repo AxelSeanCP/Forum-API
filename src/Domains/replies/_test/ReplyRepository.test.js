@@ -7,6 +7,12 @@ describe("ReplyRepository interface", () => {
     await expect(replyRepository.addReply({})).rejects.toThrow(
       "REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
+    await expect(replyRepository.checkAvailabilityReply({})).rejects.toThrow(
+      "REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+    await expect(replyRepository.verifyReplyOwner({})).rejects.toThrow(
+      "REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
     await expect(replyRepository.getRepliesByCommentId({})).rejects.toThrow(
       "REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );

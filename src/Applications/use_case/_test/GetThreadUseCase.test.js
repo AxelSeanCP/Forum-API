@@ -8,7 +8,8 @@ const GetThreadUseCase = require("../GetThreadUseCase");
 
 describe("GetThreadUseCase", () => {
   it("should orchestrating the get thread action correctly", async () => {
-    const mockDate = new Date().toISOString();
+    const mockDate = new Date("2024-10-27").toISOString();
+    const mockDate2 = new Date("2024-10-28").toISOString();
     const mockGetThread = new GetThread({
       id: "thread-123",
       title: "a thread",
@@ -29,7 +30,7 @@ describe("GetThreadUseCase", () => {
     const mockGetComment2 = new GetComment({
       id: "comment-456",
       username: "dicoding",
-      date: mockDate,
+      date: mockDate2,
       content: "a comment",
       replies: [],
     });
@@ -68,43 +69,46 @@ describe("GetThreadUseCase", () => {
 
     const thread = await getThreadUseCase.execute("thread-123");
 
-    expect(thread).toEqual({
-      id: "thread-123",
-      title: "a thread",
-      body: "a thread body",
-      date: mockDate,
-      username: "dicoding",
-      comments: [
-        {
-          id: "comment-123",
-          username: "dicoding",
-          date: mockDate,
-          content: "a comment",
-          replies: [
-            {
-              id: "reply-123",
-              username: "dicoding",
-              date: mockDate,
-              content: "a reply",
-            },
-          ],
-        },
-        {
-          id: "comment-456",
-          username: "dicoding",
-          date: mockDate,
-          content: "a comment",
-          replies: [
-            {
-              id: "reply-123",
-              username: "dicoding",
-              date: mockDate,
-              content: "a reply",
-            },
-          ],
-        },
-      ],
-    });
+    expect(thread).toStrictEqual(
+      new GetThread({
+        id: "thread-123",
+        title: "a thread",
+        body: "a thread body",
+        date: mockDate,
+        username: "dicoding",
+        comments: [
+          new GetComment({
+            id: "comment-123",
+            username: "dicoding",
+            date: mockDate,
+            content: "a comment",
+            replies: [
+              new GetReply({
+                id: "reply-123",
+                username: "dicoding",
+                date: mockDate,
+                content: "a reply",
+              }),
+            ],
+          }),
+          new GetComment({
+            id: "comment-456",
+            username: "dicoding",
+            date: mockDate2,
+            content: "a comment",
+            replies: [
+              new GetReply({
+                id: "reply-123",
+                username: "dicoding",
+                date: mockDate,
+                content: "a reply",
+              }),
+            ],
+          }),
+        ],
+      })
+    );
+
     expect(mockThreadRepository.getThread).toHaveBeenCalledWith("thread-123");
     expect(mockCommentRepository.getCommentsByThreadId).toHaveBeenCalledWith(
       "thread-123"

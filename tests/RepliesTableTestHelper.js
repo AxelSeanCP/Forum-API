@@ -5,7 +5,7 @@ const RepliesTableTestHelper = {
     id = "reply-123",
     content = "a reply",
     owner = "user-123",
-    date = new Date(),
+    date = new Date().toISOString(),
     isDeleted = false,
     commentId = "comment-123",
   }) {
