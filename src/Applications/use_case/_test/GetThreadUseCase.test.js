@@ -109,6 +109,7 @@ describe("GetThreadUseCase", () => {
       })
     );
 
+    expect(mockThreadRepository.checkThread).toHaveBeenCalledWith("thread-123");
     expect(mockThreadRepository.getThread).toHaveBeenCalledWith("thread-123");
     expect(mockCommentRepository.getCommentsByThreadId).toHaveBeenCalledWith(
       "thread-123"
