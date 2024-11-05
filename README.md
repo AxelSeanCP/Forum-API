@@ -116,6 +116,7 @@ Your server should be running on `http://localhost:5000`.
 ## Scripts
 
 - `npm run start` - Run the server
+- `npm run start:prod` - Run the server in production mode
 - `npm run start:dev` - Run the server in development mode (with Nodemon)
 - `npm run test` - Run tests with Jest
 - `npm run test:watch` - Run all tests with Jest
