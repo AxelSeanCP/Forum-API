@@ -41,14 +41,14 @@ jobs:
           npm run migrate up
           npm run test
         env:
-        CI: true
-        HOST: localhost
-        PORT: 5000
-        PGHOST: localhost
-        PGPORT: 5432
-        PGUSER: postgres
-        PGPASSWORD: Axelsean23
-        PGDATABASE: forumapi_test
-        ACCESS_TOKEN_KEY: secret
-        REFRESH_TOKEN_KEY: terces
-        ACCESS_TOKEN_AGE: 3600
+          CI: true
+          HOST: localhost
+          PORT: 5000
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: Axelsean23
+          PGDATABASE: forumapi_test
+          ACCESS_TOKEN_KEY: secret
+          REFRESH_TOKEN_KEY: terces
+          ACCESS_TOKEN_AGE: 3600
