@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "8dcdef24-33e7-441c-85a6-e5740a2bdf6d",
-		"name": "Forum API V1 Test",
+		"_postman_id": "28beb7a7-141d-404a-a009-33733ae84f31",
+		"name": "Forum API V2 Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12297972"
 	},
@@ -2704,8 +2704,8 @@
 									"}\r",
 									"\r",
 									"const currentBadAddReplyPayload = badAddReplyPayloads.shift();\r",
-									"pm.environment.set('badAddReplyPayloads', badAddReplyPayloads);\r",
 									"pm.environment.set('currentBadAddReplyPayload', JSON.stringify(currentBadAddReplyPayload));\r",
+									"pm.environment.set('badAddReplyPayloads', badAddReplyPayloads);\r",
 									""
 								],
 								"type": "text/javascript"
@@ -3195,6 +3195,953 @@
 									"    pm.expect(reply2.date).to.be.a('string');\r",
 									"    pm.expect(reply2.date).to.not.equal('');\r",
 									"    pm.expect(reply2.username).to.equal(pm.environment.get('newUsername'));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[Optional] Likes",
+			"item": [
+				{
+					"name": "[No Test] Prerequiresite",
+					"item": [
+						{
+							"name": "[No Test] Add User Dicoding",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{newUsername}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"fullname\": \"{{newFullname}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/users",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Add User Johndoe",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{newUsername2}}\",\r\n    \"password\": \"{{newPassword2}}\",\r\n    \"fullname\": \"{{newFullname2}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/users",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Login User Dicoding",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const host = pm.environment.get('host');\r",
+											"const port = pm.environment.get('port');\r",
+											"const protocol = pm.environment.get('protocol');\r",
+											"\r",
+											"const postRequest = {\r",
+											"    url: `${protocol}://${host}:${port}/users`,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            username: pm.environment.get('newUsername'),\r",
+											"            password: pm.environment.get('newPassword'),\r",
+											"            fullname: pm.environment.get('newFullname')\r",
+											"        }),\r",
+											"    },\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequest, (error, response) => {\r",
+											"    console.log(error ? error : response.json());\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.environment.set('accessToken', responseJson.data.accessToken);\r",
+											"pm.environment.set('refreshToken', responseJson.data.refreshToken);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{newUsername}}\",\r\n    \"password\": \"{{newPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/authentications",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"authentications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Login User Johndoe",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const host = pm.environment.get('host');\r",
+											"const port = pm.environment.get('port');\r",
+											"const protocol = pm.environment.get('protocol');\r",
+											"\r",
+											"const postRequest = {\r",
+											"    url: `${protocol}://${host}:${port}/users`,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'Content-Type': 'application/json',\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            username: pm.environment.get('newUsername'),\r",
+											"            password: pm.environment.get('newPassword'),\r",
+											"            fullname: pm.environment.get('newFullname')\r",
+											"        }),\r",
+											"    },\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequest, (error, response) => {\r",
+											"    console.log(error ? error : response.json());\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.environment.set('accessToken2', responseJson.data.accessToken);\r",
+											"pm.environment.set('refreshToken2', responseJson.data.refreshToken);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{newUsername2}}\",\r\n    \"password\": \"{{newPassword2}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/authentications",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"authentications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Add Thread with User Dicoding",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.environment.set('threadId', responseJson.data.addedThread.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"{{newThreadTitle}}\",\r\n    \"body\": \"{{newThreadBody}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/threads",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"threads"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Add Comment with User Dicoding",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.environment.set('commentId', responseJson.data.addedComment.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{newCommentContent}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"threads",
+										"{{threadId}}",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[No Test] Add Comment with User Johndoe",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.environment.set('commentId2', responseJson.data.addedComment.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{newCommentContent}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments",
+									"protocol": "{{protocol}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"threads",
+										"{{threadId}}",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[Optional] Like without Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response 401 status code', () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test('should show Missing Authentication message', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.message).to.equal('Missing authentication');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Like with Invalid Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 404 status code', () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test('should fail status and message', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('fail');\r",
+									"    pm.expect(responseJson.message).to.be.a('string');\r",
+									"    pm.expect(responseJson.message).to.not.equal('');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/xxxx/comments/{{commentId}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"xxxx",
+								"comments",
+								"{{commentId}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Like with Invalid Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 404 status code', () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test('should fail status and message', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('fail');\r",
+									"    pm.expect(responseJson.message).to.be.a('string');\r",
+									"    pm.expect(responseJson.message).to.not.equal('');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/xxx/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"xxx",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Johndoe Likes Dicoding's Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 200 status code', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should response with correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Dicoding Likes His Own Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 200 status code', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should response with correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Dicoding Likes Johndoe's Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 200 status code', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should response with correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId2}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId2}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Johndoe Likes His Own Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 200 status code', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should response with correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId2}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId2}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Get Liked Comments Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with status code 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should contain correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.thread).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.thread.id).to.be.a('string');\r",
+									"    pm.expect(responseJson.data.thread.id).to.not.equal('');\r",
+									"    pm.expect(responseJson.data.thread.title).to.equal(pm.environment.get('newThreadTitle'));\r",
+									"    pm.expect(responseJson.data.thread.body).to.equal(pm.environment.get('newThreadBody'));\r",
+									"    pm.expect(responseJson.data.thread.date).to.be.a('string');\r",
+									"    pm.expect(responseJson.data.thread.data).to.not.equal('');\r",
+									"    pm.expect(responseJson.data.thread.username).to.equal(pm.environment.get('newUsername'));\r",
+									"    pm.expect(responseJson.data.thread.comments).to.be.an('array');\r",
+									"    pm.expect(responseJson.data.thread.comments).to.have.length(2);\r",
+									"\r",
+									"    const [comment1, comment2] = responseJson.data.thread.comments;\r",
+									"\r",
+									"    pm.expect(comment1.id).to.be.a('string');\r",
+									"    pm.expect(comment1.id).to.not.equal('');\r",
+									"    pm.expect(comment1.username).to.equal(pm.environment.get('newUsername'));\r",
+									"    pm.expect(comment1.date).to.be.a('string');\r",
+									"    pm.expect(comment1.date).to.not.equal('');\r",
+									"    pm.expect(comment1.content).to.equal(pm.environment.get('newCommentContent'));\r",
+									"    pm.expect(comment1.likeCount).to.equal(2);\r",
+									"\r",
+									"    pm.expect(comment2.id).to.be.a('string');\r",
+									"    pm.expect(comment2.id).to.not.equal('');\r",
+									"    pm.expect(comment2.username).to.equal(pm.environment.get('newUsername2'));\r",
+									"    pm.expect(comment2.date).to.be.a('string');\r",
+									"    pm.expect(comment2.date).to.not.equal('');\r",
+									"    pm.expect(comment2.content).to.equal(pm.environment.get('newCommentContent'));\r",
+									"    pm.expect(comment2.likeCount).to.equal(2);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Dicoding Unlike Johndoe's Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with 200 status code', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should response with correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/threads/{{threadId}}/comments/{{commentId2}}/likes",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"threads",
+								"{{threadId}}",
+								"comments",
+								"{{commentId2}}",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Get Thread after Dicoding Unlike a Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should response with status code 200', () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should contain correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.thread).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.thread.id).to.be.a('string');\r",
+									"    pm.expect(responseJson.data.thread.id).to.not.equal('');\r",
+									"    pm.expect(responseJson.data.thread.title).to.equal(pm.environment.get('newThreadTitle'));\r",
+									"    pm.expect(responseJson.data.thread.body).to.equal(pm.environment.get('newThreadBody'));\r",
+									"    pm.expect(responseJson.data.thread.date).to.be.a('string');\r",
+									"    pm.expect(responseJson.data.thread.data).to.not.equal('');\r",
+									"    pm.expect(responseJson.data.thread.username).to.equal(pm.environment.get('newUsername'));\r",
+									"    pm.expect(responseJson.data.thread.comments).to.be.an('array');\r",
+									"    pm.expect(responseJson.data.thread.comments).to.have.length(2);\r",
+									"\r",
+									"    const [comment1, comment2] = responseJson.data.thread.comments;\r",
+									"\r",
+									"    pm.expect(comment1.id).to.be.a('string');\r",
+									"    pm.expect(comment1.id).to.not.equal('');\r",
+									"    pm.expect(comment1.username).to.equal(pm.environment.get('newUsername'));\r",
+									"    pm.expect(comment1.date).to.be.a('string');\r",
+									"    pm.expect(comment1.date).to.not.equal('');\r",
+									"    pm.expect(comment1.content).to.equal(pm.environment.get('newCommentContent'));\r",
+									"    pm.expect(comment1.likeCount).to.equal(2);\r",
+									"\r",
+									"    pm.expect(comment2.id).to.be.a('string');\r",
+									"    pm.expect(comment2.id).to.not.equal('');\r",
+									"    pm.expect(comment2.username).to.equal(pm.environment.get('newUsername2'));\r",
+									"    pm.expect(comment2.date).to.be.a('string');\r",
+									"    pm.expect(comment2.date).to.not.equal('');\r",
+									"    pm.expect(comment2.content).to.equal(pm.environment.get('newCommentContent'));\r",
+									"    pm.expect(comment2.likeCount).to.equal(1);\r",
 									"});"
 								],
 								"type": "text/javascript"
