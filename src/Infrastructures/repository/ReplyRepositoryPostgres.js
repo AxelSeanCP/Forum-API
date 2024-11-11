@@ -57,10 +57,10 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       text: `SELECT r.*, u.username
       FROM replies r
       LEFT JOIN users u ON u.id = r.owner
-      WHERE r.comment_id = $1
+      WHERE r.comment_id = $1 
       ORDER BY r.date ASC`,
       values: [commentId],
-    };
+    }; //ANY($1::text[])
 
     const result = await this._pool.query(query);
 

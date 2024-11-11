@@ -72,9 +72,27 @@ class CommentRepositoryPostgres extends CommentRepository {
       (comment) =>
         new GetComment({
           ...comment,
+          likeCount: 0,
           replies: [],
         })
     );
+  }
+
+  async getCommentLikeCountsById(commentId) {
+    const query = {
+      text: `SELECT count(user_id) as likes
+      FROM user_comment_likes l
+      WHERE l.comment_id = $1`,
+      values: [commentId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      return 0;
+    }
+
+    return parseInt(result.rows[0].likes, 10);
   }
 
   async deleteComment(commentId) {
