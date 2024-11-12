@@ -253,4 +253,89 @@ describe("CommentRepositoryPostgres", () => {
       expect(comment[0].is_deleted).toEqual(true);
     });
   });
+
+  describe("isLikedByUser function", () => {
+    it("should return true if user has liked the comment", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-123",
+      });
+      await UserCommentLikesTableTestHelper.addLikes({
+        commentId: "comment-123",
+      });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      const hasLiked = await commentRepository.isLikedByUser(
+        "user-123",
+        "comment-123"
+      );
+
+      expect(hasLiked).toEqual(true);
+    });
+
+    it("should return false if user hasn't liked the comment", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-123",
+      });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      const hasLiked = await commentRepository.isLikedByUser(
+        "user-123",
+        "comment-123"
+      );
+
+      expect(hasLiked).toEqual(false);
+    });
+  });
+
+  describe("addCommentLike function", () => {
+    it("should persist new comment like", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-123",
+      });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      await commentRepository.addCommentLike("user-123", "comment-123");
+
+      const commentLike = await UserCommentLikesTableTestHelper.findLikes(
+        "comment-123",
+        "user-123"
+      );
+
+      expect(commentLike).toHaveLength(1);
+    });
+  });
+
+  describe("removeCommentLike function", () => {
+    it("should remove comment like", async () => {
+      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await ThreadsTableTestHelper.addThreads({ id: "thread-123" });
+      await CommentsTableTestHelper.addComments({
+        id: "comment-123",
+      });
+      await UserCommentLikesTableTestHelper.addLikes({
+        commentId: "comment-123",
+        userId: "user-123",
+      });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, () => {});
+
+      await commentRepository.removeCommentLike("user-123", "comment-123");
+
+      const commentLike = await UserCommentLikesTableTestHelper.findLikes(
+        "comment-123",
+        "user-123"
+      );
+
+      expect(commentLike).toHaveLength(0);
+    });
+  });
 });

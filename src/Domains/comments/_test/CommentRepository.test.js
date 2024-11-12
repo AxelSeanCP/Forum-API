@@ -22,5 +22,14 @@ describe("CommentRepository interface", () => {
     await expect(commentRepository.deleteComment({})).rejects.toThrow(
       "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
+    await expect(commentRepository.isLikedByUser({})).rejects.toThrow(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+    await expect(commentRepository.addCommentLike({})).rejects.toThrow(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+    await expect(commentRepository.removeCommentLike({})).rejects.toThrow(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
   });
 });
