@@ -194,4 +194,30 @@ describe("/comments endpoint", () => {
       expect(responseJson.message).toEqual("comment tidak ditemukan");
     });
   });
+
+  describe("when PUT /comments/likes", () => {
+    it("should response 200 and add like to comment", async () => {
+      const server = await createServer(container);
+
+      await registerUserHelper(server, {});
+      const accessToken = await loginUserHelper(server, {});
+      const threadId = await createThreadHelper(server, accessToken, {});
+      const commentId = await createCommentHelper(
+        server,
+        accessToken,
+        threadId,
+        {}
+      );
+
+      const response = await server.inject({
+        method: "PUT",
+        url: `/threads/${threadId}/comments/${commentId}/likes`,
+        headers: { authorization: `Bearer ${accessToken}` },
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual("success");
+    });
+  });
 });

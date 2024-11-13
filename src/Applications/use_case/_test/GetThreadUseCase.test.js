@@ -24,6 +24,7 @@ describe("GetThreadUseCase", () => {
       username: "dicoding",
       date: mockDate,
       content: "a comment",
+      likeCount: 0,
       replies: [],
     });
 
@@ -32,6 +33,7 @@ describe("GetThreadUseCase", () => {
       username: "dicoding",
       date: mockDate2,
       content: "a comment",
+      likeCount: 0,
       replies: [],
     });
 
@@ -41,6 +43,8 @@ describe("GetThreadUseCase", () => {
       date: mockDate,
       content: "a reply",
     });
+
+    const mockLikeCount = 0;
 
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
@@ -57,6 +61,9 @@ describe("GetThreadUseCase", () => {
       .mockImplementation(() =>
         Promise.resolve([mockGetComment1, mockGetComment2])
       );
+    mockCommentRepository.getCommentLikeCountsById = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(mockLikeCount));
     mockReplyRepository.getRepliesByCommentId = jest
       .fn()
       .mockImplementation(() => Promise.resolve([mockGetReply]));
@@ -82,6 +89,7 @@ describe("GetThreadUseCase", () => {
             username: "dicoding",
             date: mockDate,
             content: "a comment",
+            likeCount: 0,
             replies: [
               new GetReply({
                 id: "reply-123",
@@ -96,6 +104,7 @@ describe("GetThreadUseCase", () => {
             username: "dicoding",
             date: mockDate2,
             content: "a comment",
+            likeCount: 0,
             replies: [
               new GetReply({
                 id: "reply-123",
@@ -113,6 +122,9 @@ describe("GetThreadUseCase", () => {
     expect(mockThreadRepository.getThread).toHaveBeenCalledWith("thread-123");
     expect(mockCommentRepository.getCommentsByThreadId).toHaveBeenCalledWith(
       "thread-123"
+    );
+    expect(mockCommentRepository.getCommentLikeCountsById).toHaveBeenCalledWith(
+      "comment-123"
     );
     expect(mockReplyRepository.getRepliesByCommentId).toHaveBeenCalledWith(
       "comment-123"

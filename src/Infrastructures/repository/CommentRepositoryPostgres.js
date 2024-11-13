@@ -72,15 +72,66 @@ class CommentRepositoryPostgres extends CommentRepository {
       (comment) =>
         new GetComment({
           ...comment,
+          likeCount: 0,
           replies: [],
         })
     );
+  }
+
+  async getCommentLikeCountsById(commentId) {
+    const query = {
+      text: `SELECT count(user_id) as likes
+      FROM user_comment_likes l
+      WHERE l.comment_id = $1`,
+      values: [commentId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      return 0;
+    }
+
+    return parseInt(result.rows[0].likes, 10);
   }
 
   async deleteComment(commentId) {
     const query = {
       text: "UPDATE comments SET is_deleted = true WHERE id = $1",
       values: [commentId],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async isLikedByUser(userId, commentId) {
+    const query = {
+      text: "SELECT * FROM user_comment_likes WHERE comment_id = $1 AND user_id = $2",
+      values: [commentId, userId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      return false;
+    }
+    return true;
+  }
+
+  async addCommentLike(userId, commentId) {
+    const id = `likes-${this._idGenerator()}`;
+    const query = {
+      text: "INSERT INTO user_comment_likes VALUES ($1, $2, $3)",
+      values: [id, userId, commentId],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async removeCommentLike(userId, commentId) {
+    const query = {
+      text: "DELETE FROM user_comment_likes WHERE user_id = $1 AND comment_id = $2",
+      values: [userId, commentId],
     };
 
     await this._pool.query(query);

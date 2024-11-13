@@ -14,9 +14,14 @@ class GetThreadUseCase {
     );
 
     for (const comment of comments) {
+      const likeCount = await this._commentRepository.getCommentLikeCountsById(
+        comment.id
+      );
       const replies = await this._replyRepository.getRepliesByCommentId(
         comment.id
       );
+
+      comment.likeCount = likeCount;
       comment.replies = replies;
     }
 
