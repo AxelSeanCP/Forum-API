@@ -122,6 +122,7 @@ Your server should be running on `http://localhost:5000`.
 - `npm run test:watch` - Run all tests with Jest
 - `npm run migrate up` - Run all migrations up
 - `npm run migrate down 0` - Roll back all migrations
+- `npm run lint` - Lint all the codes
 
 ## API Endpoints
 
@@ -140,6 +141,7 @@ Your server should be running on `http://localhost:5000`.
 
 - **POST** `/threads/:threadId/comments` - Add a comment to a thread
 - **DELETE** `/threads/:threadId/comments/:commentId` - Soft delete a comment
+- **PUT** `/threads/:threadId/comments/:commentId/likes` - Like or unlike a comment
 
 ### Replies
 
